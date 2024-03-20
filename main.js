@@ -46,3 +46,24 @@ else if (argv.if){
 
 
 function convertMarkdownToHtml(data){
+
+    var html = data;
+
+    // headings
+    html = html.replace(/^(#{1,6})\s*(.+)/gm, (match, hashes, content) => {
+    let level = hashes.length;
+    return `<h${level}>${content}</h${level}>`;
+    });
+    // Bold
+    html = html.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+    html = html.replace(/__(.*?)__/g, '<strong>$1</strong>');
+    // Italic
+    html = html.replace(/\*(.*?)\*/g, '<em>$1</em>');
+    html = html.replace(/_(.*?)_/g, '<em>$1</em>');
+    // image
+    html = html.replace(/!\[(.*?)\]\((.*?)\)/g, '<img src="$2" alt="$1">');
+    // link
+    html = html.replace(/\[(.*?)\]\((.*?)\)/g, '<a href="$2">$1</a>');
+
+    return html;
+}
