@@ -3,7 +3,7 @@ const yargs = require('yargs/yargs');
 // importing hideBin method from yargs/helpers
 const { hideBin } = require('yargs/helpers');
 
-// using hideBin method to hide the bin path and passing the process.argv to yargs
+// parsing CLI arguments
 const argv = yargs(hideBin(process.argv))
     // using option method to take input from the user
     .option('i',{
@@ -11,40 +11,23 @@ const argv = yargs(hideBin(process.argv))
         describe: 'Raw markdown file',
         type: 'string',
     })
-    .option('if'.{
+    .option('if',{
         alias: 'inputFile',
         describe: 'File containing raw markdown',
         type: 'string',
     })
     .option('of',{
         alias: 'outputFile',
-        describe: 'Output file (HTML)',
+        describe: 'Output file path (HTML). If not provided, defaults to the input file name with .html extension',
         type: 'string',
     }).argv;
 
 // importing fs module
 const fs = require('fs');
-// importing marked module
-const marked = require('marked');
 
-// function to convert markdown to html 
-if (argv.i){
-    convertMarkdownToHtml(argv.i);
+function getOutputFileName(inputFileName){
+    return inputFileName.replace(/\.[^/.]+$/, '') + '.html';
 }
-else if (argv.if){
-    fs.readFile(argv.if, 'utf8', (err, data) => {
-        if(err){
-            console.error(err);
-            return;
-        }
-        convertMarkdownToHtml(data);
-    });
-}else{
-    console.log("Please provide a markdown input ");
-}
-
-
-
 function convertMarkdownToHtml(data){
 
     var html = data;
@@ -66,4 +49,42 @@ function convertMarkdownToHtml(data){
     html = html.replace(/\[(.*?)\]\((.*?)\)/g, '<a href="$2">$1</a>');
 
     return html;
+}
+
+function writeHtmlToFileorConsole(html, outputFileName){
+
+    if(outputFileName){
+        fs.writeFile(outputFileName, html, (err) => {
+            if(err){
+                console.error(err);
+                return;
+            }
+            console.log(`HTML written to ${outputFileName}`);
+        });
+    }
+    else{
+        console.log(html);
+    }
+}
+
+
+// function to convert markdown to html 
+if (argv.i){
+
+    const html = convertMarkdownToHtml(argv.i);
+    writeHtmlToFileorConsole(html, argv.of);
+}
+else if (argv.if){
+    fs.readFile(argv.if, 'utf8', (err, data) => {
+        if(err){
+            console.error(err);
+            return;
+        }
+        const html = convertMarkdownToHtml(data);
+        const outputFileName = argv.of || getOutputFileName(argv.if);
+        writeHtmlToFileorConsole(html, outputFileName);
+
+    });
+}else{
+    console.log("Please provide a markdown input ");
 }
