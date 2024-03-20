@@ -47,6 +47,8 @@ function convertMarkdownToHtml(data){
     html = html.replace(/!\[(.*?)\]\((.*?)\)/g, '<img src="$2" alt="$1">');
     // link
     html = html.replace(/\[(.*?)\]\((.*?)\)/g, '<a href="$2">$1</a>');
+    // unordered list
+    html = html.replace(/^\s*\*\s(.+)/gm, '<ul><li>$1</li></ul>');
 
     return html;
 }
