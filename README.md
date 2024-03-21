@@ -1,2 +1,3 @@
 # md2HTML
-A CLI tool for converting Markdown to HTML
+
+A CLI tool for convertMarkdowntoHtmling Markdown to HTML
