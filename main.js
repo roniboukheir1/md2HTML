@@ -53,7 +53,7 @@ function convertMarkdownToHtml(data){
     return html;
 }
 
-function writeHtmlToFileorConsole(html, outputFileName){
+function writeHtmlToFileOrConsole(html, outputFileName){
 
     if(outputFileName){
         fs.writeFile(outputFileName, html, (err) => {
@@ -69,26 +69,21 @@ function writeHtmlToFileorConsole(html, outputFileName){
     }
 }
 
+// Main logic for converting markdown to HTML
+if (argv.f) {
+  const inputFileName = Array.isArray(argv.f) ? argv.f[0] : argv.f;
+  const outputFileName = argv.o ? (Array.isArray(argv.f) ? argv.f[1] : undefined) : argv.of;
 
-// function to convert markdown to html 
-if (argv.i){
-
-    const html = convertMarkdownToHtml(argv.i);
-    writeHtmlToFileorConsole(html, argv.of);
+  fs.readFile(inputFileName, 'utf8', (err, data) => {
+    if (err) {
+      console.error('Error reading the file:', err);
+      return;
+    }
+    const html = convertMarkdownToHtml(data);
+    const outputFile = outputFileName || getOutputFileName(inputFileName);
+    writeHtmlToFileOrConsole(html, outputFile);
+  });
+} else {
+  console.log("Please provide a markdown input");
 }
-else if (argv.if){
-    fs.readFile(argv.if, 'utf8', (err, data) => {
-        if(err){
-            console.error(err);
-            return;
-        }
-        const html = convertMarkdownToHtml(data);
-        const outputFileName = argv.of || getOutputFileName(argv.if);
-        writeHtmlToFileorConsole(html, outputFileName);
-
-    });
-}else{
-    console.log("Please provide a markdown input ");
-}
-
 module.exports = convertMarkdownToHtml;
