@@ -31,7 +31,6 @@ function getOutputFileName(inputFileName){
 function convertMarkdownToHtml(data){
 
     var html = data;
-
     // headings
     html = html.replace(/^(#{1,6})\s*(.+)/gm, (match, hashes, content) => {
     let level = hashes.length;
@@ -70,7 +69,13 @@ function writeHtmlToFileOrConsole(html, outputFileName){
 }
 
 // Main logic for converting markdown to HTML
-if (argv.f) {
+console.log(argv);
+
+if(argv.i){
+    const html = convertMarkdownToHtml(argv.i);
+    writeHtmlToFileOrConsole(html, argv.of);
+}
+else if (argv.f) {
   const inputFileName = Array.isArray(argv.f) ? argv.f[0] : argv.f;
   const outputFileName = argv.o ? (Array.isArray(argv.f) ? argv.f[1] : undefined) : argv.of;
 
