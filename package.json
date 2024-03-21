@@ -5,11 +5,14 @@
   "main": "main.js",
   "scripts": {
     "test": "jest"
-  } ,
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
     "jest": "^29.7.0"
+  },
+  "dependencies": {
+    "convert-source-map": "^2.0.0"
   }
 }
