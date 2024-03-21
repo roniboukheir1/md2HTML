@@ -90,3 +90,5 @@ else if (argv.if){
 }else{
     console.log("Please provide a markdown input ");
 }
+
+module.exports = convertMarkdownToHtml;
